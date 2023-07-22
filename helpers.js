@@ -1,6 +1,7 @@
 // variables
 const testUserId = '64bb0a72b7c30c80352bdf50';
 const fullerConsoleLine = '###################################################### -_- #####################################################';
+const NOT_ROUTE_MSG = { message: 'Пожалуйста ознакомьтесь с API сервера, для обращения к корректным роутам. https://github.com/Art-Frich/express-mesto-gha' };
 const NOT_USER_MSG = { message: 'Пользователь не найден' };
 const NOT_CARD_MSG = { message: 'Не удалось найти карточку' };
 const NOT_CARDS_TEXT = 'Пока нет ни одной созданной карточки';
@@ -35,6 +36,7 @@ const isExist = (data) => {
 };
 
 module.exports = {
+  NOT_ROUTE_MSG,
   NOT_CARDS_TEXT,
   NOT_USER_MSG,
   NOT_CARD_MSG,

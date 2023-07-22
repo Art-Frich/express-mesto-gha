@@ -2,8 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const {
-  PORT, MONGO_URI, options, testUserId, fullerConsoleLine,
+  PORT, MONGO_URI, NOT_ROUTE_MSG,
+  options, testUserId, fullerConsoleLine,
   handleAppError: handleError,
+  NOT_FOUND_STATUS,
 } = require('./helpers');
 
 try {
@@ -19,6 +21,9 @@ try {
   });
   app.use('/users', require('./routes/users'));
   app.use('/cards', require('./routes/cards'));
+  app.use((req, res) => {
+    res.status(NOT_FOUND_STATUS).send(NOT_ROUTE_MSG);
+  });
 
   app.listen(PORT, () => {
     console.log(fullerConsoleLine);
