@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 const {
-  NOT_FOUND_STATUS, NOT_USERS_TEXT,
+  NOT_FOUND_STATUS, NOT_USERS_TEXT, UNCORRECT_DATA_STATUS,
   isExist, getId,
   handleContorllersError: handleError,
   NOT_USER_MSG: NOT_FOUND_MSG,
@@ -18,7 +18,7 @@ module.exports.getUser = (req, res) => {
     .findById(req.user._id)
     .then((user) => (isExist(user)
       ? res.send({ data: user })
-      : res.status(NOT_FOUND_STATUS).send(NOT_FOUND_MSG)))
+      : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
     .catch((err) => handleError(err, res));
 };
 

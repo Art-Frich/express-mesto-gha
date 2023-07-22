@@ -1,6 +1,6 @@
 const Card = require('../models/cardModel');
 const {
-  NOT_FOUND_STATUS, NOT_CARDS_TEXT,
+  UNCORRECT_DATA_STATUS,
   isExist, getId,
   handleContorllersError: handleError,
   NOT_CARD_MSG: NOT_FOUND_MSG,
@@ -9,7 +9,9 @@ const {
 module.exports.getCards = (req, res) => {
   Card
     .find({})
-    .then((cards) => res.send({ data: cards.length ? cards : NOT_CARDS_TEXT }))
+    // надеюсь, что смогу использовать в след. спринте
+    // .then((cards) => res.send({ data: cards.length ? cards : NOT_CARDS_TEXT }))
+    .then((cards) => res.send({ data: cards }))
     .catch((err) => handleError(err, res));
 };
 
@@ -28,7 +30,7 @@ module.exports.deleteCard = (req, res) => {
     .findByIdAndRemove(req.params.cardId)
     .then((card) => (isExist(card)
       ? res.send({ data: card })
-      : res.status(NOT_FOUND_STATUS).send(NOT_FOUND_MSG)))
+      : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
     .catch((err) => handleError(err, res));
 };
 
@@ -41,7 +43,7 @@ module.exports.setLike = (req, res) => {
     )
     .then((card) => (isExist(card)
       ? res.send({ data: card })
-      : res.status(NOT_FOUND_STATUS).send(NOT_FOUND_MSG)))
+      : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
     .catch((err) => handleError(err, res));
 };
 
@@ -54,6 +56,6 @@ module.exports.deleteLike = (req, res) => {
     )
     .then((card) => (isExist(card)
       ? res.send({ data: card })
-      : res.status(NOT_FOUND_STATUS).send(NOT_FOUND_MSG)))
+      : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
     .catch((err) => handleError(err, res));
 };
