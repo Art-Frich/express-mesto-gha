@@ -1,6 +1,4 @@
-// variables
 const fullerConsoleLine = '###################################################### -_- #####################################################';
-const testUserId = '64bb0a72b7c30c80352bdf50';
 const NOT_ROUTE_MSG = { message: 'Пожалуйста ознакомьтесь с API сервера, для обращения к корректным роутам. https://github.com/Art-Frich/express-mesto-gha' };
 const NOT_USER_MSG = { message: 'Пользователь не найден' };
 const NOT_CARD_MSG = { message: 'Не удалось найти карточку' };
@@ -11,7 +9,6 @@ const NOT_FOUND_STATUS = 404;
 const ERROR_DEFAULT_STATUS = 500;
 const UNCORRECT_DATA_STATUS = 400;
 
-// object variables
 const options = {
   serverSelectionTimeoutMS: 5000,
   family: 4,
@@ -48,7 +45,6 @@ module.exports = {
   NOT_FOUND_STATUS,
   ERROR_DEFAULT_STATUS,
 
-  testUserId,
   options,
   fullerConsoleLine,
 

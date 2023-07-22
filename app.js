@@ -2,11 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const {
-  NOT_ROUTE_MSG, NOT_FOUND_STATUS,
-  options, fullerConsoleLine, testUserId,
+  NOT_FOUND_STATUS, NOT_ROUTE_MSG,
+  options, fullerConsoleLine,
   handleAppError: handleError,
 } = require('./helpers');
 
+const testUserId = '64bb0a72b7c30c80352bdf50';
 const {
   PORT = 3000,
   MONGO_URI = 'mongodb://localhost:27017/mestodb',
