@@ -1,5 +1,4 @@
 // variables
-const testUserId = '64bb0a72b7c30c80352bdf50';
 const fullerConsoleLine = '###################################################### -_- #####################################################';
 const NOT_ROUTE_MSG = { message: 'Пожалуйста ознакомьтесь с API сервера, для обращения к корректным роутам. https://github.com/Art-Frich/express-mesto-gha' };
 const NOT_USER_MSG = { message: 'Пользователь не найден' };
@@ -39,7 +38,6 @@ module.exports = {
   NOT_FOUND_STATUS,
   ERROR_DEFAULT_STATUS,
 
-  testUserId,
   options,
   fullerConsoleLine,
 
