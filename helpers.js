@@ -12,11 +12,6 @@ const ERROR_DEFAULT_STATUS = 500;
 const UNCORRECT_DATA_STATUS = 400;
 
 // object variables
-const {
-  PORT = 3000,
-  MONGO_URI = 'mongodb://localhost:27017/mestodb',
-} = process.env;
-
 const options = {
   serverSelectionTimeoutMS: 5000,
   family: 4,
@@ -43,8 +38,6 @@ module.exports = {
   NOT_USERS_TEXT,
   NOT_FOUND_STATUS,
   ERROR_DEFAULT_STATUS,
-  PORT,
-  MONGO_URI,
 
   testUserId,
   options,

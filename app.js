@@ -2,11 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const {
-  PORT, MONGO_URI, NOT_ROUTE_MSG,
+  NOT_ROUTE_MSG,
   options, testUserId, fullerConsoleLine,
   handleAppError: handleError,
   NOT_FOUND_STATUS,
 } = require('./helpers');
+
+const {
+  PORT = 3000,
+  MONGO_URI = 'mongodb://localhost:27017/mestodb',
+} = process.env;
 
 try {
   const app = express();
