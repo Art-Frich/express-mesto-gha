@@ -1,9 +1,9 @@
 const User = require('../models/userModel');
 const {
-  NOT_FOUND_STATUS, NOT_USERS_TEXT, UNCORRECT_DATA_STATUS,
+  NOT_USER_MSG: NOT_FOUND_MSG,
+  NOT_FOUND_STATUS, NOT_USERS_TEXT, UNCORRECT_DATA_STATUS, SUCCES_CREATE_STATUS,
   isExist, getId,
   handleContorllersError: handleError,
-  NOT_USER_MSG: NOT_FOUND_MSG,
 } = require('../helpers');
 
 module.exports.getUsers = (req, res) => {
@@ -14,7 +14,6 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUser = (req, res) => {
-  console.log(req.params);
   User
     .findById(req.params.userId)
     .then((user) => (isExist(user)
@@ -25,9 +24,10 @@ module.exports.getUser = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
+
   User
     .create({ name, about, avatar })
-    .then((newUser) => res.send({ data: newUser }))
+    .then((newUser) => res.status(SUCCES_CREATE_STATUS).send({ data: newUser }))
     .catch((err) => handleError(err, res));
 };
 

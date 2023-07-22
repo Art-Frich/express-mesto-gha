@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const {
   NOT_FOUND_STATUS, NOT_ROUTE_MSG,
   options, fullerConsoleLine,
@@ -17,6 +18,7 @@ try {
   const app = express();
   mongoose.connect(MONGO_URI, options).catch(handleError);
 
+  app.use(helmet());
   app.use(bodyParser.json());
   app.use((req, res, next) => {
     req.user = {

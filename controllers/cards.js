@@ -1,9 +1,8 @@
 const Card = require('../models/cardModel');
 const {
-  UNCORRECT_DATA_STATUS,
+  NOT_CARD_MSG: NOT_FOUND_MSG, UNCORRECT_DATA_STATUS, SUCCES_CREATE_STATUS,
   isExist, getId,
   handleContorllersError: handleError,
-  NOT_CARD_MSG: NOT_FOUND_MSG,
 } = require('../helpers');
 
 module.exports.getCards = (req, res) => {
@@ -21,7 +20,7 @@ module.exports.createCard = (req, res) => {
 
   Card
     .create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.status(SUCCES_CREATE_STATUS).send({ data: card }))
     .catch((err) => handleError(err, res));
 };
 

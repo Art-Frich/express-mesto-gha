@@ -11,7 +11,7 @@
 ## Запуск проекта
 
 `npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+`npm run dev` — запускает сервер с hot-reload   
 `npm run dev_i` — запускает сервер с hot-reload и в режиме inspect
 
 ## О проекте
@@ -36,7 +36,7 @@
 - **Description:** Create a new user with provided data (name, about, avatar) in the request body.
 - **Request Body:** JSON object with name, about, and avatar properties.
 - **Response:**
-  - Success (200 OK): Created user object.
+  - Success (201 OK): Created user object.
   - Error (400 Bad Request): Invalid data provided.
   - Error (500 Internal Server Error): Default error message.
 
@@ -92,7 +92,7 @@
 - **Description:** Create a new card with provided data (name, link, owner) in the request body.
 - **Request Body:** JSON object with name, link, and owner properties.
 - **Response:**
-  - Success (200 OK): Created card object.
+  - Success (201 OK): Created card object.
   - Error (400 Bad Request): Invalid data provided.
   - Error (500 Internal Server Error): Default error message.
 
