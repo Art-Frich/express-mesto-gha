@@ -12,7 +12,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (value) => /^(http|https):\/\//.test(value),
-      message: 'Некорректный URL',
+      message: 'Некорректный URL. Ожидаемый формат: http:// или https:// ',
     },
   },
   owner: {
@@ -20,8 +20,14 @@ const cardSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
-  likes: {},
-  createdAt: {},
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    default: [],
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const cardModel = mongoose.model('card', cardSchema);

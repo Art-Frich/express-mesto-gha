@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (value) => /^(http|https):\/\//.test(value),
-      message: 'Некорректный URL',
+      message: 'Некорректный URL. Ожидаемый формат: http:// или https:// ',
     },
   },
 });
