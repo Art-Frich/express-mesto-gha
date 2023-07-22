@@ -23,6 +23,7 @@ try {
     req.user = {
       _id: '64bb0a72b7c30c80352bdf50',
     };
+
     next();
   });
   app.use('/users', require('./routes/users'));
