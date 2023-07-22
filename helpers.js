@@ -18,9 +18,18 @@ const options = {
 
 // functions
 const handleAppError = (err) => console.log(`Произошла ошибка: ${err.name} ${err.message}`);
-const handleContorllersError = (err, res) => (err.name === 'ValidationError'
-  ? res.status(UNCORRECT_DATA_STATUS).send({ message: UNCORRECT_DATA_TEXT + err.message })
-  : res.status(ERROR_DEFAULT_STATUS).send({ message: err.message }));
+const handleContorllersError = (err, res) => {
+  if (err.name === 'ValidationError' || err.name === 'CastError') {
+    return res.status(UNCORRECT_DATA_STATUS).send({ message: UNCORRECT_DATA_TEXT + err.message });
+  }
+  if (err.name === 'RangeError' && /cards/.test(err.stack)) {
+    return res.status(NOT_FOUND_STATUS).send(NOT_CARD_MSG);
+  }
+  if (err.name === 'RangeError' && /users/.test(err.stack)) {
+    return res.status(NOT_FOUND_STATUS).send(NOT_USER_MSG);
+  }
+  return res.status(ERROR_DEFAULT_STATUS).send({ message: err.message });
+};
 const getId = (req) => req.user._id;
 const isExist = (data) => {
   if (!data) {

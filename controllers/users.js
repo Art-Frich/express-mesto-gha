@@ -14,10 +14,13 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUser = (req, res) => {
+  console.log(req.params);
   User
-    .findById(req.user._id)
+    .findById(req.params.userId)
     .then((user) => (isExist(user)
       ? res.send({ data: user })
+    // кажется, все find в случае некорректного запроса вызывают range
+    // error, вместо того, чтобы вернуть null
       : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
     .catch((err) => handleError(err, res));
 };
