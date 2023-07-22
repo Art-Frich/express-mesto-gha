@@ -23,7 +23,6 @@ try {
     req.user = {
       _id: testUserId,
     };
-
     next();
   });
   app.use('/users', require('./routes/users'));
