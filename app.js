@@ -8,7 +8,7 @@ const {
   NOT_FOUND_STATUS,
 } = require('./helpers');
 
-const testUserId = '64bb0a72b7c30c80352bdf50';
+// const testUserId = '64bb0a72b7c30c80352bdf50';
 const {
   PORT = 3000,
   MONGO_URI = 'mongodb://localhost:27017/mestodb',
@@ -21,7 +21,7 @@ try {
   app.use(bodyParser.json());
   app.use((req, res, next) => {
     req.user = {
-      _id: testUserId,
+      _id: '64bb0a72b7c30c80352bdf50',
     };
     next();
   });
