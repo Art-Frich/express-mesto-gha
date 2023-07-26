@@ -1,60 +1,81 @@
 const Card = require('../models/cardModel');
 const {
-  NOT_CARD_MSG: NOT_FOUND_MSG, UNCORRECT_DATA_STATUS, SUCCES_CREATE_STATUS,
-  isExist, getId,
-  handleContorllersError: handleError,
+  NOT_CARD_TEXT: NOT_FOUND_MSG,
+  UNCORRECT_DATA_STATUS, SUCCES_CREATE_STATUS, NOT_CARDS_TEXT, ALIEN_CARD_TEXT, ALIEN_CARD_STATUS,
 } = require('../helpers');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card
     .find({})
-    // надеюсь, что смогу использовать в след. спринте
-    // .then((cards) => res.send({ data: cards.length ? cards : NOT_CARDS_TEXT }))
-    .then((cards) => res.send({ data: cards }))
-    .catch((err) => handleError(err, res));
+    .then((cards) => res.send({ data: cards.length ? cards : NOT_CARDS_TEXT }))
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
   Card
     .create({ name, link, owner })
     .then((card) => res.status(SUCCES_CREATE_STATUS).send({ data: card }))
-    .catch((err) => handleError(err, res));
+    .catch(next);
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card
-    .findByIdAndRemove(req.params.cardId)
-    .then((card) => (isExist(card)
-      ? res.send({ data: card })
-      : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
-    .catch((err) => handleError(err, res));
+    .findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        const error = new Error(NOT_FOUND_MSG);
+        error.status = UNCORRECT_DATA_STATUS;
+        throw error;
+      }
+      if (card.owner === req.user._id) {
+        card.deleteOne();
+        res.send({ data: card });
+      } else {
+        const error = new Error(ALIEN_CARD_TEXT);
+        error.status = ALIEN_CARD_STATUS;
+        throw error;
+      }
+    })
+    .catch(next);
 };
 
-module.exports.setLike = (req, res) => {
+module.exports.setLike = (req, res, next) => {
   Card
     .findByIdAndUpdate(
       req.params.cardId,
-      { $addToSet: { likes: getId(req) } },
+      { $addToSet: { likes: req.user._id } },
       { new: true },
     )
-    .then((card) => (isExist(card)
-      ? res.send({ data: card })
-      : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
-    .catch((err) => handleError(err, res));
+    .then((card) => {
+      if (!card) {
+        const error = new Error(NOT_FOUND_MSG);
+        error.status = UNCORRECT_DATA_STATUS;
+        throw error;
+      }
+
+      res.send({ data: card });
+    })
+    .catch(next);
 };
 
-module.exports.deleteLike = (req, res) => {
+module.exports.deleteLike = (req, res, next) => {
   Card
     .findByIdAndUpdate(
       req.params.cardId,
-      { $pull: { likes: getId(req) } },
+      { $pull: { likes: req.user._id } },
       { new: true },
     )
-    .then((card) => (isExist(card)
-      ? res.send({ data: card })
-      : res.status(UNCORRECT_DATA_STATUS).send(NOT_FOUND_MSG)))
-    .catch((err) => handleError(err, res));
+    .then((card) => {
+      if (!card) {
+        const error = new Error(NOT_FOUND_MSG);
+        error.status = UNCORRECT_DATA_STATUS;
+        throw error;
+      }
+
+      res.send({ data: card });
+    })
+    .catch(next);
 };
