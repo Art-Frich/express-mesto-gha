@@ -5,9 +5,10 @@ module.exports = (req, res, next) => {
   const error = new Error(NOT_AUTH_TEXT);
   error.status = UNCORRECT_AUTH_STATUS;
 
-  const { authorization } = req.headers;
+  const authorization = req.headers.cookie.split('=')[1];
 
-  if (!authorization || !authorization.startsWith('Bearer')) {
+  // || !authorization.startsWith('Bearer')
+  if (!authorization) {
     throw error;
   }
 

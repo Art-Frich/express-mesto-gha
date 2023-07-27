@@ -85,7 +85,16 @@ module.exports.avatarUpd = (req, res, next) => {
 };
 
 module.exports.getMe = (req, res, next) => {
-  Promise.resolve(() => res.send(req.user))
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        const error = new Error(NOT_FOUND_MSG);
+        error.status = UNCORRECT_DATA_STATUS;
+        throw error;
+      }
+
+      res.send({ data: user });
+    })
     .catch(next);
 };
 
@@ -101,13 +110,12 @@ module.exports.login = (req, res, next) => {
         { expiresIn: '7d' },
       );
 
-      res.send({ data: user });
       res
         .cookie('jwt', token, {
           maxAge: 1000 * 3600 * 24 * 7,
           httpOnly: true,
-        })
-        .end(); // 7 day
+        });// 7 day
+      res.send({ data: user });
     })
     .catch(next);
 };
