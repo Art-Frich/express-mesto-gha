@@ -36,13 +36,16 @@ module.exports.createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  if (User.find({ email })) {
-    const error = new Error(USER_EXIST_TEXT);
-    error.status = USER_EXIST_STATUS;
-    throw error;
-  }
+  User.find({ email })
+    .then((user) => {
+      if (user.length) {
+        const error = new Error(USER_EXIST_TEXT);
+        error.status = USER_EXIST_STATUS;
+        throw error;
+      }
 
-  bcrypt.hash(password, 16)
+      return bcrypt.hash(password, 16);
+    })
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
