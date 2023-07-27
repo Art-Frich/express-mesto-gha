@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
+const auth = require('./middlewares/auth');
 
 const { login, createUser } = require('./controllers/users');
 const {
@@ -24,7 +25,8 @@ try {
 
   app.use(helmet());
   app.use(bodyParser.json());
-  app.post('/sigin', celebrate({
+
+  app.post('/signin', celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().pattern(regExpEmail),
       password: Joi.string().required(),
@@ -39,9 +41,8 @@ try {
       password: Joi.string().required(),
     }),
   }), createUser);
-  app.use(require('./middlewares/auth'));
-  app.use('/users', require('./routes/users'));
-  app.use('/cards', require('./routes/cards'));
+  app.use('/users', auth, require('./routes/users'));
+  app.use('/cards', auth, require('./routes/cards'));
   app.use((req, res) => {
     res.status(NOT_FOUND_STATUS).send(NOT_ROUTE_MSG);
   });

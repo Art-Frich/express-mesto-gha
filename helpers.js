@@ -19,8 +19,9 @@ const UNCORRECT_AUTH_STATUS = 401;
 const ALIEN_CARD_STATUS = 403;
 const USER_EXIST_STATUS = 409;
 
-const regExpUrl = /^(http|https):\/\/[\w-\.\_\~\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]{2,}#*$/;
-const regExpEmail = /[\w]+@[\w]+\.[a-z]{2,3}/;
+// eslint-disable-next-line no-useless-escape
+const regExpUrl = /^(http|https):\/\/[\w\-._~:/?#[\]@!\$&'()\*\+,;=]{2,}#*$/;
+const regExpEmail = /[\w]+\@[\w]+\.[a-z]{2,}/;
 
 const options = {
   serverSelectionTimeoutMS: 5000,
