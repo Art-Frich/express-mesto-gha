@@ -9,7 +9,7 @@ const { login, createUser } = require('./controllers/users');
 const {
   NOT_FOUND_STATUS, NOT_ROUTE_MSG, UNCORRECT_DATA_STATUS,
   UNCORRECT_DATA_TEXT, NOT_CARD_TEXT, NOT_USER_TEXT,
-  ERROR_DEFAULT_STATUS, USER_EXIST_TEXT, USER_EXIST_STATUS,
+  ERROR_DEFAULT_STATUS,
   options, fullerConsoleLine, regExpEmail, regExpUrl,
   handleAppError: handleError,
 } = require('./helpers');
