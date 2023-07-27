@@ -22,7 +22,7 @@ const options = {
   family: 4,
 };
 
-const handleAppError = (err) => console.log(`Произошла ошибка: ${err.name} ${err.message}`);
+const handleAppError = (err) => console.log(`Произошла ошибка: ${err.name} ${err.message}. \n${err.stack}`);
 
 module.exports = {
   NOT_ROUTE_MSG,

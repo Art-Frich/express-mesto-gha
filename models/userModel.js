@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     validate: {
-      validator: (value) => /.*@*\.*/.test(value),
+      validator: (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
       message: 'Некорректный email. Ожидаемый формат email@domen.source',
     },
   },
@@ -39,22 +39,24 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = (email, password) => this
-  .findOne({ email })
-  .select('+password')
-  .then((user) => {
-    const error = new Error(UNCORRECT_AUTH_TEXT);
-    error.status = UNCORRECT_AUTH_STATUS;
+userSchema.statics = function findUserByCredentials(email, password) {
+  this
+    .findOne({ email })
+    .select('+password')
+    .then((user) => {
+      const error = new Error(UNCORRECT_AUTH_TEXT);
+      error.status = UNCORRECT_AUTH_STATUS;
 
-    try {
-      if (bcrypt.compare(password, user.password)) {
-        return user;
+      try {
+        if (bcrypt.compare(password, user.password)) {
+          return user;
+        }
+        throw error;
+      } catch {
+        throw error;
       }
-      throw error;
-    } catch {
-      throw error;
-    }
-  });
+    });
+};
 
 const userModel = mongoose.model('user', userSchema);
 module.exports = userModel;

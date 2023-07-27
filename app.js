@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const { celebrate, Joi } = require('celebrate');
 
 const { login, createUser } = require('./controllers/users');
 const {
@@ -23,8 +24,21 @@ try {
 
   app.use(helmet());
   app.use(bodyParser.json());
-  app.post('/sigin', login);
-  app.post('/signup', createUser);
+  app.post('/sigin', celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().pattern(/.*@*\.*/),
+      password: Joi.string().required(),
+    }),
+  }), login);
+  app.post('/signup', celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+      avatar: Joi.string().pattern(/^(http|https):\/\//),
+      email: Joi.string().required().pattern(/.*@*\.*/),
+      password: Joi.string().required(),
+    }),
+  }), createUser);
   app.use(require('./middlewares/auth'));
   app.use('/users', require('./routes/users'));
   app.use('/cards', require('./routes/cards'));
@@ -33,29 +47,29 @@ try {
   });
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
-    let { statusCode = ERROR_DEFAULT_STATUS, message } = err;
+    let { status = ERROR_DEFAULT_STATUS, message } = err;
 
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      statusCode = UNCORRECT_DATA_STATUS;
+      status = UNCORRECT_DATA_STATUS;
       message = UNCORRECT_DATA_TEXT + err.message;
     }
     if (err.name === 'RangeError' && /cards/.test(err.stack)) {
-      statusCode = NOT_FOUND_STATUS;
+      status = NOT_FOUND_STATUS;
       message = NOT_CARD_TEXT;
     }
     if (err.name === 'RangeError' && /users/.test(err.stack)) {
-      statusCode = NOT_FOUND_STATUS;
+      status = NOT_FOUND_STATUS;
       message = NOT_USER_TEXT;
     }
     if (err.code === 11000) {
-      statusCode = USER_EXIST_STATUS;
+      status = USER_EXIST_STATUS;
       message = USER_EXIST_TEXT;
     }
 
     res
-      .status(statusCode)
+      .status(status)
       .send({
-        message: statusCode === ERROR_DEFAULT_STATUS
+        message: status === ERROR_DEFAULT_STATUS
           ? 'На сервере произошла ошибка'
           : message,
       });
