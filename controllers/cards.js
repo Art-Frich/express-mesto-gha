@@ -1,14 +1,16 @@
 const Card = require('../models/cardModel');
 const {
   NOT_CARD_TEXT: NOT_FOUND_MSG,
-  UNCORRECT_DATA_STATUS, SUCCES_CREATE_STATUS, NOT_CARDS_TEXT,
-  ALIEN_CARD_TEXT, ALIEN_CARD_STATUS, NOT_FOUND_STATUS,
+  // NOT_CARDS_TEXT,
+  ALIEN_CARD_TEXT, ALIEN_CARD_STATUS, NOT_FOUND_STATUS, SUCCES_CREATE_STATUS,
 } = require('../helpers');
 
 module.exports.getCards = (req, res, next) => {
   Card
     .find({})
-    .then((cards) => res.send({ data: cards.length ? cards : NOT_CARDS_TEXT }))
+    // когда нибудь я её раскоментирую
+    // .then((cards) => res.send({ data: cards.length ? cards : NOT_CARDS_TEXT }))
+    .then((cards) => res.send({ data: cards }))
     .catch(next);
 };
 
