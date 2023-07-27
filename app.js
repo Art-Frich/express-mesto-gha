@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
 const { login, createUser } = require('./controllers/users');
 const {
@@ -45,6 +45,7 @@ try {
   app.use((req, res) => {
     res.status(NOT_FOUND_STATUS).send(NOT_ROUTE_MSG);
   });
+  app.use(errors());
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     let { status = ERROR_DEFAULT_STATUS, message } = err;
