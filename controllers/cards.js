@@ -1,7 +1,8 @@
 const Card = require('../models/cardModel');
 const {
   NOT_CARD_TEXT: NOT_FOUND_MSG,
-  UNCORRECT_DATA_STATUS, SUCCES_CREATE_STATUS, NOT_CARDS_TEXT, ALIEN_CARD_TEXT, ALIEN_CARD_STATUS,
+  UNCORRECT_DATA_STATUS, SUCCES_CREATE_STATUS, NOT_CARDS_TEXT,
+  ALIEN_CARD_TEXT, ALIEN_CARD_STATUS, NOT_FOUND_STATUS,
 } = require('../helpers');
 
 module.exports.getCards = (req, res, next) => {
@@ -27,10 +28,11 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         const error = new Error(NOT_FOUND_MSG);
-        error.status = UNCORRECT_DATA_STATUS;
+        error.status = NOT_FOUND_STATUS;
         throw error;
       }
-      if (card.owner === req.user._id) {
+
+      if (card.owner.toString() === req.user._id) {
         card.deleteOne();
         res.send({ data: card });
       } else {
@@ -52,7 +54,7 @@ module.exports.setLike = (req, res, next) => {
     .then((card) => {
       if (!card) {
         const error = new Error(NOT_FOUND_MSG);
-        error.status = UNCORRECT_DATA_STATUS;
+        error.status = NOT_FOUND_STATUS;
         throw error;
       }
 
@@ -71,7 +73,7 @@ module.exports.deleteLike = (req, res, next) => {
     .then((card) => {
       if (!card) {
         const error = new Error(NOT_FOUND_MSG);
-        error.status = UNCORRECT_DATA_STATUS;
+        error.status = NOT_FOUND_STATUS;
         throw error;
       }
 

@@ -22,6 +22,7 @@ const USER_EXIST_STATUS = 409;
 // eslint-disable-next-line no-useless-escape
 const regExpUrl = /^(http|https):\/\/[\w\-._~:/?#[\]@!\$&'()\*\+,;=]{2,}#*$/;
 const regExpEmail = /[\w]+@[\w]+\.[a-z]{2,}/;
+const regExpObjectId = /^[\w]{24}$/;
 
 const options = {
   serverSelectionTimeoutMS: 5000,
@@ -51,6 +52,7 @@ module.exports = {
 
   regExpUrl,
   regExpEmail,
+  regExpObjectId,
   options,
   fullerConsoleLine,
 

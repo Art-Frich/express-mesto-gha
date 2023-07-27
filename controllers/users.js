@@ -22,7 +22,7 @@ module.exports.getUser = (req, res, next) => {
     .then((user) => {
       if (!user) {
         const error = new Error(NOT_FOUND_MSG);
-        error.status = UNCORRECT_DATA_STATUS;
+        error.status = NOT_FOUND_STATUS;
         throw error;
       }
 
