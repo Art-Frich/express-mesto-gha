@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { regExpUrl } = require('../helpers');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,7 +12,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     type: String,
     validate: {
-      validator: (value) => /^(http|https):\/\//.test(value),
+      validator: (value) => regExpUrl.test(value),
       message: 'Некорректный URL. Ожидаемый формат: http:// или https:// ',
     },
   },

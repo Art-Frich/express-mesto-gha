@@ -40,7 +40,16 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((newUser) => res.status(SUCCES_CREATE_STATUS).send({ data: newUser }))
+    .then((newUser) => {
+      const {
+        name_, about_, email_, avatar_, _id_,
+      } = newUser;
+      res.status(SUCCES_CREATE_STATUS).send({
+        data: {
+          _id: _id_, name: name_, about: about_, avatar: avatar_, email: email_,
+        },
+      });
+    })
     .catch(next);
 };
 

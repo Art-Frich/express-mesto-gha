@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { UNCORRECT_AUTH_TEXT, UNCORRECT_AUTH_STATUS } = require('../helpers');
+const {
+  UNCORRECT_AUTH_TEXT, UNCORRECT_AUTH_STATUS, regExpUrl, regExpEmail,
+} = require('../helpers');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -19,7 +21,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     type: String,
     validate: {
-      validator: (value) => /^(http|https):\/\//.test(value),
+      validator: (value) => regExpUrl.test(value),
       message: 'Некорректный URL. Ожидаемый формат: http:// или https:// ',
     },
   },
@@ -28,7 +30,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     validate: {
-      validator: (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+      validator: (value) => regExpEmail.test(value),
       message: 'Некорректный email. Ожидаемый формат email@domen.source',
     },
   },

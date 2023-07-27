@@ -9,7 +9,7 @@ const {
   NOT_FOUND_STATUS, NOT_ROUTE_MSG, UNCORRECT_DATA_STATUS,
   UNCORRECT_DATA_TEXT, NOT_CARD_TEXT, NOT_USER_TEXT,
   ERROR_DEFAULT_STATUS, USER_EXIST_TEXT, USER_EXIST_STATUS,
-  options, fullerConsoleLine,
+  options, fullerConsoleLine, regExpEmail, regExpUrl,
   handleAppError: handleError,
 } = require('./helpers');
 
@@ -26,7 +26,7 @@ try {
   app.use(bodyParser.json());
   app.post('/sigin', celebrate({
     body: Joi.object().keys({
-      email: Joi.string().required().pattern(/.*@*\.*/),
+      email: Joi.string().required().pattern(regExpEmail),
       password: Joi.string().required(),
     }),
   }), login);
@@ -34,8 +34,8 @@ try {
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(/^(http|https):\/\//),
-      email: Joi.string().required().pattern(/.*@*\.*/),
+      avatar: Joi.string().pattern(regExpUrl),
+      email: Joi.string().required().pattern(regExpEmail),
       password: Joi.string().required(),
     }),
   }), createUser);
