@@ -63,10 +63,6 @@ try {
       status = NOT_FOUND_STATUS;
       message = NOT_USER_TEXT;
     }
-    if (err.code === 11000) {
-      status = USER_EXIST_STATUS;
-      message = USER_EXIST_TEXT;
-    }
 
     res
       .status(status)

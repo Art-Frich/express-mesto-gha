@@ -6,7 +6,7 @@ const User = require('../models/userModel');
 const {
   NOT_USER_TEXT: NOT_FOUND_MSG,
   NOT_FOUND_STATUS, NOT_USERS_TEXT, UNCORRECT_DATA_STATUS,
-  SUCCES_CREATE_STATUS,
+  SUCCES_CREATE_STATUS, USER_EXIST_STATUS, USER_EXIST_TEXT,
 } = require('../helpers');
 
 module.exports.getUsers = (req, res, next) => {
@@ -35,6 +35,12 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
+
+  if (User.find({ email })) {
+    const error = new Error(USER_EXIST_TEXT);
+    error.status = USER_EXIST_STATUS;
+    throw error;
+  }
 
   bcrypt.hash(password, 16)
     .then((hash) => User.create({

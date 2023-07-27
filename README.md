@@ -7,6 +7,7 @@
 `/routes` — папка с файлами роутера  
 `/controllers` — папка с файлами контроллеров пользователя и карточки   
 `/models` — папка с файлами описания схем пользователя и карточки  
+`/middlewares` — папка с мидлварами  
 
 ## Запуск проекта
 
@@ -16,7 +17,20 @@
 
 ## О проекте
 
-Служит для отработки навыков работы с Express & Node.js & MongoDB & Postman
+Служит для отработки навыков работы с Express & Node.js & MongoDB & Postman & JWT
+
+# Функционал
+
+* добавить пользователя
+* обновить аватар пользователя
+* обновить данные профиля пользователя
+* добавить карточку
+* удалить карточку
+* лайкнуть карточку
+* убрать лайк карточки
+* удалить карточку
+* возможность однократно логиниться: реализовано за счёт jwt, который хранится и передается через куки
+* хеширование пароля с хранением "соли" на сервере
 
 # API Documentation
 
@@ -32,7 +46,7 @@
 ### Create User
 
 - **Method:** POST
-- **Endpoint:** /users
+- **Endpoint:** /signup
 - **Description:** Create a new user with provided data (name, about, avatar) in the request body.
 - **Request Body:** JSON object with name, about, and avatar properties.
 - **Response:**
@@ -125,5 +139,16 @@
   - Success (200 OK): Updated card object with removed like.
   - Error (400 Bad Request): Invalid data provided for removing like.
   - Error (404 Not Found): Card with the specified ID not found.
+  - Error (500 Internal Server Error): Default error message.
+
+### Login
+
+- **Method:** POST
+- **Endpoint:** /signin
+- **Description:** login and get jwt cookie
+- **Request Body:** JSON object properties of user.
+- **Response:**
+  - Success (200 OK): Updated user object.
+  - Error (400 Bad Request): Invalid data provided.
   - Error (500 Internal Server Error): Default error message.
 
