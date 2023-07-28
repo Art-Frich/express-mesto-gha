@@ -1,28 +1,14 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
 
-const {
-  getUser, getUsers, profileUpd, avatarUpd, getMe,
-} = require('../controllers/users');
-const { regExpObjectId, regExpUrl } = require('../helpers');
+// eslint-disable-next-line object-curly-newline
+const { getUser, getUsers, profileUpd, avatarUpd, getMe } = require('../controllers/users');
+const { checkUserIdSchema, patchMeSchema, patchAvatarSchema } = require('../celebrateValidation/celebrateSchems');
 
 router.get('/', getUsers);
 router.get('/me', getMe);
-router.get('/:userId', celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().pattern(regExpObjectId),
-  }),
-}), getUser);
-router.patch('/me', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-  }),
-}), profileUpd);
-router.patch('/me/avatar', celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().pattern(regExpUrl),
-  }),
-}), avatarUpd);
+router.get('/:userId', celebrate(checkUserIdSchema), getUser);
+router.patch('/me', celebrate(patchMeSchema), profileUpd);
+router.patch('/me/avatar', celebrate(patchAvatarSchema), avatarUpd);
 
 module.exports = router;

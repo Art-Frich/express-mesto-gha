@@ -1,15 +1,11 @@
 const Card = require('../models/cardModel');
-const {
-  NOT_CARD_TEXT: NOT_FOUND_MSG,
-  // NOT_CARDS_TEXT,
-  ALIEN_CARD_TEXT, ALIEN_CARD_STATUS, NOT_FOUND_STATUS, SUCCES_CREATE_STATUS,
-} = require('../helpers');
+const { SUCCES_CREATE_STATUS } = require('../helpers/constants');
+const { checkExistence, checkHandleSend } = require('../helpers/utils');
+const { AlienCardError } = require('../castomErrors/AlienCardError');
 
 module.exports.getCards = (req, res, next) => {
   Card
     .find({})
-    // когда нибудь я её раскоментирую
-    // .then((cards) => res.send({ data: cards.length ? cards : NOT_CARDS_TEXT }))
     .then((cards) => res.send({ data: cards }))
     .catch(next);
 };
@@ -28,58 +24,29 @@ module.exports.deleteCard = (req, res, next) => {
   Card
     .findById(req.params.cardId)
     .then((card) => {
-      if (!card) {
-        const error = new Error(NOT_FOUND_MSG);
-        error.status = NOT_FOUND_STATUS;
-        throw error;
-      }
-
+      checkExistence(card);
       if (card.owner.toString() === req.user._id) {
         card.deleteOne();
         res.send({ data: card });
       } else {
-        const error = new Error(ALIEN_CARD_TEXT);
-        error.status = ALIEN_CARD_STATUS;
-        throw error;
+        throw new AlienCardError();
       }
     })
     .catch(next);
 };
 
 module.exports.setLike = (req, res, next) => {
-  Card
-    .findByIdAndUpdate(
-      req.params.cardId,
-      { $addToSet: { likes: req.user._id } },
-      { new: true },
-    )
-    .then((card) => {
-      if (!card) {
-        const error = new Error(NOT_FOUND_MSG);
-        error.status = NOT_FOUND_STATUS;
-        throw error;
-      }
-
-      res.send({ data: card });
-    })
-    .catch(next);
+  checkHandleSend(Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  ), res, next);
 };
 
 module.exports.deleteLike = (req, res, next) => {
-  Card
-    .findByIdAndUpdate(
-      req.params.cardId,
-      { $pull: { likes: req.user._id } },
-      { new: true },
-    )
-    .then((card) => {
-      if (!card) {
-        const error = new Error(NOT_FOUND_MSG);
-        error.status = NOT_FOUND_STATUS;
-        throw error;
-      }
-
-      res.send({ data: card });
-    })
-    .catch(next);
+  checkHandleSend(Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  ), res, next);
 };

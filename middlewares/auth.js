@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const { UNCORRECT_AUTH_STATUS, NOT_AUTH_TEXT } = require('../helpers');
+const { NOT_AUTH_TEXT } = require('../helpers/constants');
+const { AuthError } = require('../castomErrors/AuthError');
 
 module.exports = (req, res, next) => {
-  const error = new Error(NOT_AUTH_TEXT);
-  error.status = UNCORRECT_AUTH_STATUS;
+  const err = new AuthError(NOT_AUTH_TEXT);
   let payload;
 
   try {
@@ -11,15 +11,15 @@ module.exports = (req, res, next) => {
 
     // || !authorization.startsWith('Bearer')
     if (!authorization) {
-      throw error;
+      throw err;
     }
 
     const token = authorization.replace('Bearer ', '');
-
     const { NODE_ENV, JWT_SECRET } = process.env;
+
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch {
-    throw error;
+    throw err;
   }
 
   req.user = payload;

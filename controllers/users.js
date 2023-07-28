@@ -1,13 +1,10 @@
-require('dotenv').config();
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
-const {
-  NOT_USER_TEXT: NOT_FOUND_MSG,
-  NOT_FOUND_STATUS, NOT_USERS_TEXT, UNCORRECT_DATA_STATUS,
-  SUCCES_CREATE_STATUS, USER_EXIST_STATUS, USER_EXIST_TEXT,
-} = require('../helpers');
+const { NOT_USERS_TEXT, SUCCES_CREATE_STATUS, cookieOptions } = require('../helpers/constants');
+const { tokenCreate, checkHandleSend } = require('../helpers/utils');
+const { UserAlreadyExist } = require('../castomErrors/UserAlreadyExist');
+const { UncorrectDataError } = require('../castomErrors/UncorrectDataError');
 
 module.exports.getUsers = (req, res, next) => {
   User
@@ -17,18 +14,29 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  User
-    .findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        const error = new Error(NOT_FOUND_MSG);
-        error.status = NOT_FOUND_STATUS;
-        throw error;
-      }
+  checkHandleSend(User.findById(req.params.userId), res, next);
+};
 
-      res.send({ data: user });
-    })
-    .catch(next);
+module.exports.getMe = (req, res, next) => {
+  checkHandleSend(User.findById(req.user._id), res, next, UncorrectDataError);
+};
+
+module.exports.profileUpd = (req, res, next) => {
+  const { name, about } = req.body;
+  checkHandleSend(User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    { new: true, runValidators: true },
+  ), res, next);
+};
+
+module.exports.avatarUpd = (req, res, next) => {
+  const { avatar } = req.body;
+  checkHandleSend(User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    { new: true, runValidators: true },
+  ), res, next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -39,9 +47,7 @@ module.exports.createUser = (req, res, next) => {
   User.find({ email })
     .then((user) => {
       if (user.length) {
-        const error = new Error(USER_EXIST_TEXT);
-        error.status = USER_EXIST_STATUS;
-        throw error;
+        throw new UserAlreadyExist();
       }
 
       return bcrypt.hash(password, 16);
@@ -59,71 +65,13 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.profileUpd = (req, res, next) => {
-  const { name, about } = req.body;
-
-  User
-    .findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        const error = new Error(NOT_FOUND_MSG);
-        error.status = NOT_FOUND_STATUS;
-        throw error;
-      }
-
-      res.send({ data: user });
-    })
-    .catch(next);
-};
-
-module.exports.avatarUpd = (req, res, next) => {
-  const { avatar } = req.body;
-
-  User
-    .findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        const error = new Error(NOT_FOUND_MSG);
-        error.status = NOT_FOUND_STATUS;
-        throw error;
-      }
-
-      res.send({ data: user });
-    })
-    .catch(next);
-};
-
-module.exports.getMe = (req, res, next) => {
-  User.findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        const error = new Error(NOT_FOUND_MSG);
-        error.status = UNCORRECT_DATA_STATUS;
-        throw error;
-      }
-
-      res.send({ data: user });
-    })
-    .catch(next);
-};
-
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const { NODE_ENV, JWT_SECRET } = process.env;
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
-      );
-
-      res
-        .cookie('jwt', token, {
-          maxAge: 1000 * 3600 * 24 * 7,
-          httpOnly: true,
-        });// 7 day
+      const token = tokenCreate(user._id);
+      res.cookie('jwt', token, cookieOptions);
       res.send({ data: user });
     })
     .catch(next);

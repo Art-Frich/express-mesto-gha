@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
-const { regExpUrl } = require('../helpers');
+// eslint-disable-next-line object-curly-newline
+const { regExpUrl, EXPECTED_URL_TEXT, minLen, maxLen } = require('../helpers/constants');
 
 const cardSchema = new mongoose.Schema({
   name: {
-    minlength: 2,
-    maxlength: 30,
+    minlength: minLen,
+    maxlength: maxLen,
     required: true,
     type: String,
   },
@@ -13,7 +14,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (value) => regExpUrl.test(value),
-      message: 'Некорректный URL. Ожидаемый формат: http:// или https:// ',
+      message: EXPECTED_URL_TEXT,
     },
   },
   owner: {

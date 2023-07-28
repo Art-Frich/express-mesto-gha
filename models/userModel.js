@@ -1,19 +1,22 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const {
-  UNCORRECT_AUTH_TEXT, UNCORRECT_AUTH_STATUS, regExpUrl, regExpEmail,
-} = require('../helpers');
+  regExpUrl, regExpEmail,
+  EXPECTED_URL_TEXT, EXPECTED_EMAIL_TEXT, UNCORRECT_AUTH_TEXT,
+  minLen, maxLen,
+} = require('../helpers/constants');
+const { AuthError } = require('../castomErrors/AuthError');
 
 const userSchema = new mongoose.Schema({
   name: {
-    minlength: 2,
-    maxlength: 30,
+    minlength: minLen,
+    maxlength: maxLen,
     default: 'Жак-Ив Кусто',
     type: String,
   },
   about: {
-    minlength: 2,
-    maxlength: 30,
+    minlength: minLen,
+    maxlength: maxLen,
     default: 'Исследователь',
     type: String,
   },
@@ -22,7 +25,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (value) => regExpUrl.test(value),
-      message: 'Некорректный URL. Ожидаемый формат: http:// или https:// ',
+      message: EXPECTED_URL_TEXT,
     },
   },
   email: {
@@ -31,7 +34,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (value) => regExpEmail.test(value),
-      message: 'Некорректный email. Ожидаемый формат email@domen.source',
+      message: EXPECTED_EMAIL_TEXT,
     },
   },
   password: {
@@ -47,16 +50,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .findOne({ email })
     .select('+password')
     .then((user) => {
-      const error = new Error(UNCORRECT_AUTH_TEXT);
-      error.status = UNCORRECT_AUTH_STATUS;
+      const err = new AuthError(UNCORRECT_AUTH_TEXT);
 
       try {
-        if (bcrypt.compare(password, user.password)) {
-          return user;
-        }
-        throw error;
+        if (bcrypt.compare(password, user.password)) return user;
+        throw err;
       } catch {
-        throw error;
+        throw err;
       }
     });
 };

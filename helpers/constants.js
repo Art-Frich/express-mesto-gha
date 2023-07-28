@@ -10,6 +10,8 @@ const UNCORRECT_AUTH_TEXT = 'Неправильная почта или паро
 const NOT_AUTH_TEXT = 'Необходима авторизация';
 const ALIEN_CARD_TEXT = 'Вы не можете удалять чужие карточки';
 const USER_EXIST_TEXT = 'Пользователь с таким email уже зарегистрирован';
+const EXPECTED_URL_TEXT = 'Некорректный URL. Ожидаемый формат: http://... или https://... ';
+const EXPECTED_EMAIL_TEXT = 'Некорректный email. Ожидаемый формат email@domen.source';
 
 const NOT_FOUND_STATUS = 404;
 const ERROR_DEFAULT_STATUS = 500;
@@ -19,17 +21,22 @@ const UNCORRECT_AUTH_STATUS = 401;
 const ALIEN_CARD_STATUS = 403;
 const USER_EXIST_STATUS = 409;
 
+const minLen = 2;
+const maxLen = 30;
+
 // eslint-disable-next-line no-useless-escape
 const regExpUrl = /^(http|https):\/\/[\w\-._~:/?#[\]@!\$&'()\*\+,;=]{2,}#*$/;
 const regExpEmail = /[\w]+@[\w]+\.[a-z]{2,}/;
 const regExpObjectId = /^[\w]{24}$/;
 
-const options = {
+const mongooseOptions = {
   serverSelectionTimeoutMS: 5000,
   family: 4,
 };
-
-const handleAppError = (err) => console.log(`Произошла ошибка: ${err.name} ${err.message}. \n${err.stack}`);
+const cookieOptions = {
+  maxAge: 1000 * 3600 * 24 * 7,
+  httpOnly: true,
+};// 7 day
 
 module.exports = {
   NOT_ROUTE_MSG,
@@ -49,12 +56,18 @@ module.exports = {
   ALIEN_CARD_STATUS,
   USER_EXIST_TEXT,
   USER_EXIST_STATUS,
+  EXPECTED_URL_TEXT,
+  EXPECTED_EMAIL_TEXT,
+
+  minLen,
+  maxLen,
 
   regExpUrl,
   regExpEmail,
   regExpObjectId,
-  options,
-  fullerConsoleLine,
 
-  handleAppError,
+  mongooseOptions,
+  cookieOptions,
+
+  fullerConsoleLine,
 };
