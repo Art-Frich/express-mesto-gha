@@ -6,7 +6,7 @@ const {
 } = require('./constants');
 const { NotFoundError } = require('../castomErrors/NotFoundError');
 
-const checkExistence = (object, Err) => {
+const checkExistence = (object, Err = NotFoundError) => {
   if (!object) {
     throw new Err();
   }
@@ -36,7 +36,6 @@ module.exports.checkHandleSend = (promise, res, next, Err = NotFoundError) => pr
 // eslint-disable-next-line no-unused-vars
 module.exports.handleQueryError = (err, req, res, next) => {
   let { status = ERROR_DEFAULT_STATUS, message } = err;
-
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     status = UNCORRECT_DATA_STATUS;
     message = UNCORRECT_DATA_TEXT + err.message;
@@ -58,3 +57,5 @@ module.exports.handleQueryError = (err, req, res, next) => {
         : message,
     });
 };
+
+module.exports.checkExistence = checkExistence;
