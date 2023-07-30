@@ -1,17 +1,17 @@
 const fullerConsoleLine = '###################################################### -_- #####################################################';
-const NOT_ROUTE_MSG = { message: 'Пожалуйста ознакомьтесь с API сервера для обращения к корректным роутам. https://github.com/Art-Frich/express-mesto-gha' };
 
+const NOT_ROUTE_TEXT = 'Пожалуйста ознакомьтесь с API сервера для обращения к корректным роутам. https://github.com/Art-Frich/express-mesto-gha';
 const NOT_USER_TEXT = 'Пользователь не найден';
 const NOT_CARD_TEXT = 'Не удалось найти карточку';
 const NOT_CARDS_TEXT = 'Пока нет ни одной созданной карточки';
 const NOT_USERS_TEXT = 'Пока нет ни одного зарегистрированного пользователя';
+const NOT_AUTH_TEXT = 'Необходима авторизация';
 const UNCORRECT_DATA_TEXT = 'Переданные данные некорректны. ';
 const UNCORRECT_AUTH_TEXT = 'Неправильная почта или пароль.';
-const NOT_AUTH_TEXT = 'Необходима авторизация';
 const ALIEN_CARD_TEXT = 'Вы не можете удалять чужие карточки';
 const USER_EXIST_TEXT = 'Пользователь с таким email уже зарегистрирован';
 const EXPECTED_URL_TEXT = 'Некорректный URL. Ожидаемый формат: http://... или https://... ';
-const EXPECTED_EMAIL_TEXT = 'Некорректный email. Ожидаемый формат email@domen.source';
+const EXPECTED_EMAIL_TEXT = 'Некорректный email. Пример: primer@gmail.com';
 
 const NOT_FOUND_STATUS = 404;
 const ERROR_DEFAULT_STATUS = 500;
@@ -25,7 +25,7 @@ const minLen = 2;
 const maxLen = 30;
 
 // eslint-disable-next-line no-useless-escape
-const regExpUrl = /^(http|https):\/\/[\w\-._~:/?#[\]@!\$&'()\*\+,;=]{2,}#*$/;
+const regExpUrl = /^(http|https):\/\/[\w\-._~:/?#[\]@!\$&'()\*\+,;=]+\.[a-z\/]{2,}#*$/;
 const regExpEmail = /[\w]+@[\w]+\.[a-z]{2,}/;
 const regExpObjectId = /^[\w]{24}$/;
 
@@ -39,7 +39,7 @@ const cookieOptions = {
 };// 7 day
 
 module.exports = {
-  NOT_ROUTE_MSG,
+  NOT_ROUTE_TEXT,
   NOT_USER_TEXT,
   NOT_CARD_TEXT,
   NOT_USERS_TEXT,

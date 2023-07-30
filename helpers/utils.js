@@ -1,10 +1,11 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const {
-  NOT_FOUND_STATUS, NOT_ROUTE_MSG, ERROR_DEFAULT_STATUS, UNCORRECT_DATA_STATUS,
+  NOT_FOUND_STATUS, ERROR_DEFAULT_STATUS, UNCORRECT_DATA_STATUS,
   UNCORRECT_DATA_TEXT, NOT_CARD_TEXT, NOT_USER_TEXT, fullerConsoleLine,
 } = require('./constants');
-const { NotFoundError } = require('../castomErrors/NotFoundError');
+const { NotFoundError } = require('../castomErrors/NotFoundErrors/NotFoundError');
+const { NotFoundRouteError } = require('../castomErrors/NotFoundErrors/NotFoundRouteError');
 
 const checkExistence = (object, Err = NotFoundError) => {
   if (!object) {
@@ -13,7 +14,7 @@ const checkExistence = (object, Err = NotFoundError) => {
 };
 
 module.exports.handleAppError = (err) => console.log(`Произошла ошибка: ${err.name} ${err.message}. \n${err.stack}`);
-module.exports.handleOtherRouts = (req, res) => res.status(NOT_FOUND_STATUS).send(NOT_ROUTE_MSG);
+module.exports.handleOtherRouts = (req, res, next) => next(new NotFoundRouteError());
 module.exports.handleStartServerConsole = (PORT) => console.log(`${fullerConsoleLine}\nApp listening on port  ${PORT}`);
 
 module.exports.tokenCreate = (id) => {

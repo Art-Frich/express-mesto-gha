@@ -28,7 +28,7 @@ try {
   app.post('/signup', celebrate(signupSchema), createUser);
   app.use('/users', auth, require('./routes/users'));
   app.use('/cards', auth, require('./routes/cards'));
-  app.use(handleOtherRouts);
+  app.use(auth, handleOtherRouts);
 
   app.use(errors()); // celebrate errors handle
   app.use(handleQueryError); // others error handle

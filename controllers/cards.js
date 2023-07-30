@@ -2,6 +2,7 @@ const Card = require('../models/cardModel');
 const { SUCCES_CREATE_STATUS } = require('../helpers/constants');
 const { checkExistence, checkHandleSend } = require('../helpers/utils');
 const { AlienCardError } = require('../castomErrors/AlienCardError');
+const { NotFoundCardError } = require('../castomErrors/NotFoundErrors/NotFoundCardError');
 
 module.exports.getCards = (req, res, next) => {
   Card
@@ -24,7 +25,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card
     .findById(req.params.cardId)
     .then((card) => {
-      checkExistence(card);
+      checkExistence(card, NotFoundCardError);
       if (card.owner.toString() === req.user._id) {
         card.deleteOne();
         res.send({ data: card });
@@ -40,7 +41,7 @@ module.exports.setLike = (req, res, next) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
-  ), res, next);
+  ), res, next, NotFoundCardError);
 };
 
 module.exports.deleteLike = (req, res, next) => {
@@ -48,5 +49,5 @@ module.exports.deleteLike = (req, res, next) => {
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
-  ), res, next);
+  ), res, next, NotFoundCardError);
 };
