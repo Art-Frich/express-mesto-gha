@@ -1,5 +1,5 @@
 const { NOT_CARD_TEXT } = require('../../helpers/constants');
-const { NotFoundError } = require('./NotFoundError');
+const NotFoundError = require('./NotFoundError');
 
 class NotFoundCardError extends NotFoundError {
   constructor() {
@@ -7,6 +7,4 @@ class NotFoundCardError extends NotFoundError {
   }
 }
 
-module.exports = {
-  NotFoundCardError,
-};
+module.exports = NotFoundCardError;

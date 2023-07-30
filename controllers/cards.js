@@ -1,8 +1,8 @@
 const Card = require('../models/cardModel');
+const AlienCardError = require('../castomErrors/AlienCardError');
 const { SUCCES_CREATE_STATUS } = require('../helpers/constants');
 const { checkExistence, checkHandleSend } = require('../helpers/utils');
-const { AlienCardError } = require('../castomErrors/AlienCardError');
-const { NotFoundCardError } = require('../castomErrors/NotFoundErrors/NotFoundCardError');
+const NotFoundCardError = require('../castomErrors/NotFoundErrors/NotFoundCardError');
 
 module.exports.getCards = (req, res, next) => {
   Card

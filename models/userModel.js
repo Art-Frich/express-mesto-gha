@@ -5,7 +5,7 @@ const {
   EXPECTED_URL_TEXT, EXPECTED_EMAIL_TEXT, UNCORRECT_AUTH_TEXT,
   minLen, maxLen,
 } = require('../helpers/constants');
-const { AuthError } = require('../castomErrors/AuthError');
+const AuthError = require('../castomErrors/AuthError');
 
 const userSchema = new mongoose.Schema({
   name: {

@@ -1,11 +1,13 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const {
-  NOT_FOUND_STATUS, ERROR_DEFAULT_STATUS, UNCORRECT_DATA_STATUS,
-  UNCORRECT_DATA_TEXT, NOT_CARD_TEXT, NOT_USER_TEXT, fullerConsoleLine,
+  ERROR_DEFAULT_STATUS, fullerConsoleLine,
 } = require('./constants');
-const { NotFoundError } = require('../castomErrors/NotFoundErrors/NotFoundError');
-const { NotFoundRouteError } = require('../castomErrors/NotFoundErrors/NotFoundRouteError');
+const NotFoundRouteError = require('../castomErrors/NotFoundErrors/NotFoundRouteError');
+const NotFoundCardError = require('../castomErrors/NotFoundErrors/NotFoundCardError');
+const NotFoundUserError = require('../castomErrors/NotFoundErrors/NotFoundUserError');
+const UncorrectDataError = require('../castomErrors/UncorrectDataError');
+const NotFoundError = require('../castomErrors/NotFoundErrors/NotFoundError');
 
 const checkExistence = (object, Err = NotFoundError) => {
   if (!object) {
@@ -34,21 +36,21 @@ module.exports.checkHandleSend = (promise, res, next, Err = NotFoundError) => pr
   })
   .catch(next);
 
-// eslint-disable-next-line no-unused-vars
-module.exports.handleQueryError = (err, req, res, next) => {
-  let { status = ERROR_DEFAULT_STATUS, message } = err;
-  if (err.name === 'ValidationError' || err.name === 'CastError') {
-    status = UNCORRECT_DATA_STATUS;
-    message = UNCORRECT_DATA_TEXT + err.message;
-  }
+module.exports.handleError = (err, req, res, next) => {
+  // if (err.name === 'ValidationError') {
+  //   throw new UncorrectDataError(err.message);
   if (err.name === 'RangeError' && /cards/.test(err.stack)) {
-    status = NOT_FOUND_STATUS;
-    message = NOT_CARD_TEXT;
+    throw new NotFoundCardError();
+  } else if (err.name === 'RangeError' && /users/.test(err.stack)) {
+    throw new NotFoundUserError();
   }
-  if (err.name === 'RangeError' && /users/.test(err.stack)) {
-    status = NOT_FOUND_STATUS;
-    message = NOT_USER_TEXT;
-  }
+
+  next(err);
+};
+
+// eslint-disable-next-line no-unused-vars
+module.exports.sendError = (err, req, res, next) => {
+  const { status = ERROR_DEFAULT_STATUS, message } = err;
 
   res
     .status(status)

@@ -7,6 +7,4 @@ class UserAlreadyExist extends Error {
   }
 }
 
-module.exports = {
-  UserAlreadyExist,
-};
+module.exports = UserAlreadyExist;

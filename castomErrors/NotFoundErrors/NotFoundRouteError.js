@@ -1,5 +1,5 @@
 const { NOT_ROUTE_TEXT } = require('../../helpers/constants');
-const { NotFoundError } = require('./NotFoundError');
+const NotFoundError = require('./NotFoundError');
 
 class NotFoundRouteError extends NotFoundError {
   constructor() {
@@ -7,6 +7,4 @@ class NotFoundRouteError extends NotFoundError {
   }
 }
 
-module.exports = {
-  NotFoundRouteError,
-};
+module.exports = NotFoundRouteError;

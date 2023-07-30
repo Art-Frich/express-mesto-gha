@@ -7,6 +7,4 @@ class AlienCardError extends Error {
   }
 }
 
-module.exports = {
-  AlienCardError,
-};
+module.exports = AlienCardError;

@@ -1,5 +1,5 @@
 const { NOT_USER_TEXT } = require('../../helpers/constants');
-const { NotFoundError } = require('./NotFoundError');
+const NotFoundError = require('./NotFoundError');
 
 class NotFoundUserError extends NotFoundError {
   constructor() {
@@ -7,6 +7,4 @@ class NotFoundUserError extends NotFoundError {
   }
 }
 
-module.exports = {
-  NotFoundUserError,
-};
+module.exports = NotFoundUserError;

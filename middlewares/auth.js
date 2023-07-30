@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { NOT_AUTH_TEXT } = require('../helpers/constants');
-const { AuthError } = require('../castomErrors/AuthError');
+const AuthError = require('../castomErrors/AuthError');
 
 module.exports = (req, res, next) => {
   const err = new AuthError(NOT_AUTH_TEXT);

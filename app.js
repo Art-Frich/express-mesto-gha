@@ -8,7 +8,7 @@ const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const { signinSchema, signupSchema } = require('./celebrateValidation/celebrateSchems');
 const {
-  handleAppError, handleOtherRouts, handleStartServerConsole, handleQueryError,
+  handleAppError, handleOtherRouts, handleStartServerConsole, handleError, sendError,
 } = require('./helpers/utils');
 const { mongooseOptions } = require('./helpers/constants');
 
@@ -31,7 +31,8 @@ try {
   app.use(auth, handleOtherRouts);
 
   app.use(errors()); // celebrate errors handle
-  app.use(handleQueryError); // others error handle
+  app.use(handleError); // others error handle
+  app.use(sendError); // send others error
 
   app.listen(PORT, handleStartServerConsole(PORT));
 } catch (err) {

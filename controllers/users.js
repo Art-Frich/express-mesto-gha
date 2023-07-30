@@ -3,9 +3,9 @@ const User = require('../models/userModel');
 
 const { NOT_USERS_TEXT, SUCCES_CREATE_STATUS, cookieOptions } = require('../helpers/constants');
 const { tokenCreate, checkHandleSend } = require('../helpers/utils');
-const { UserAlreadyExist } = require('../castomErrors/UserAlreadyExist');
-const { UncorrectDataError } = require('../castomErrors/UncorrectDataError');
-const { NotFoundUserError } = require('../castomErrors/NotFoundErrors/NotFoundUserError');
+const UserAlreadyExist = require('../castomErrors/UserAlreadyExist');
+const UncorrectDataError = require('../castomErrors/UncorrectDataError');
+const NotFoundUserError = require('../castomErrors/NotFoundErrors/NotFoundUserError');
 
 module.exports.getUsers = (req, res, next) => {
   User
@@ -45,14 +45,7 @@ module.exports.createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  User.find({ email })
-    .then((user) => {
-      if (user.length) {
-        throw new UserAlreadyExist();
-      }
-
-      return bcrypt.hash(password, 16);
-    })
+  bcrypt.hash(password, 16)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
@@ -63,7 +56,10 @@ module.exports.createUser = (req, res, next) => {
         },
       });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) next(new UserAlreadyExist());
+      else next(err);
+    });
 };
 
 module.exports.login = (req, res, next) => {
