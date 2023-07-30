@@ -3,15 +3,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-const { celebrate, errors } = require('celebrate');
+const { errors } = require('celebrate');
 
-const auth = require('./middlewares/auth');
-const { login, createUser } = require('./controllers/users');
-const { signinSchema, signupSchema } = require('./celebrateValidation/celebrateSchems');
 const {
-  handleAppError, handleOtherRouts, handleStartServerConsole, handleError, sendError,
+  handleAppError, handleStartServerConsole, handleError, sendError,
 } = require('./helpers/utils');
 const { mongooseOptions } = require('./helpers/constants');
+const routes = require('./routes/index');
 
 const {
   PORT = 3000,
@@ -26,11 +24,7 @@ try {
   app.use(bodyParser.json());
   app.use(cookieParser());
 
-  app.post('/signin', celebrate(signinSchema), login);
-  app.post('/signup', celebrate(signupSchema), createUser);
-  app.use('/users', auth, require('./routes/users'));
-  app.use('/cards', auth, require('./routes/cards'));
-  app.use(auth, handleOtherRouts);
+  app.use(routes);
 
   app.use(errors()); // celebrate errors handle
   app.use(handleError); // others error handle

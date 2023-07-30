@@ -5,7 +5,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['airbnb', 'airbnb-base'],
+  extends: ['airbnb-base'],
   overrides: [
     {
       env: {
@@ -22,7 +22,5 @@ module.exports = {
   },
   rules: {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
-    'no-console': 'off',
-    'global-require': 'off',
   },
 };

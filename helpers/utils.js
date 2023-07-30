@@ -14,6 +14,7 @@ const checkExistence = (object, Err = NotFoundError) => {
   }
 };
 
+/* eslint-disable no-console */
 module.exports.handleAppError = (err) => console.log(`Произошла ошибка: ${err.name} ${err.message}. \n${err.stack}`);
 module.exports.handleOtherRouts = (req, res, next) => next(new NotFoundRouteError());
 module.exports.handleStartServerConsole = (PORT) => console.log(`${fullerConsoleLine}\nApp listening on port  ${PORT}`);

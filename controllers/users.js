@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
 
-const { NOT_USERS_TEXT, SUCCES_CREATE_STATUS, cookieOptions } = require('../helpers/constants');
+const {
+  NOT_USERS_TEXT, SUCCES_CREATE_STATUS, cookieOptions, MONGO_CONFLICT_STATUS,
+} = require('../helpers/constants');
 const { tokenCreate, checkHandleSend } = require('../helpers/utils');
 const UserAlreadyExist = require('../castomErrors/UserAlreadyExist');
 const UncorrectDataError = require('../castomErrors/UncorrectDataError');
@@ -57,7 +59,7 @@ module.exports.createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      if (err.code === 11000) next(new UserAlreadyExist());
+      if (err.code === MONGO_CONFLICT_STATUS) next(new UserAlreadyExist());
       else next(err);
     });
 };
@@ -69,7 +71,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = tokenCreate(user._id);
       res.cookie('jwt', token, cookieOptions);
-      res.send({ data: user });
+      res.send({ _id: user._id });
     })
     .catch(next);
 };
