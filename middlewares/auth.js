@@ -7,16 +7,10 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    const authorization = req.headers.cookie.split('=')[1];
-
-    // || !authorization.startsWith('Bearer')
-    if (!authorization) {
-      throw err;
-    }
-
-    const token = authorization.replace('Bearer ', '');
+    const token = req.cookies.jwt;
     const { NODE_ENV, JWT_SECRET } = process.env;
 
+    // .verify выкинет ошибку при несоответствии
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch {
     throw err;

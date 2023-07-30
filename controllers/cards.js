@@ -27,12 +27,11 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       checkExistence(card, NotFoundCardError);
       if (card.owner.toString() === req.user._id) {
-        card.deleteOne();
-        res.send({ data: card });
-      } else {
-        throw new AlienCardError();
+        return card.deleteOne();
       }
+      throw new AlienCardError();
     })
+    .then((data) => res.send({ data }))
     .catch(next);
 };
 

@@ -6,7 +6,6 @@ const {
 const NotFoundRouteError = require('../castomErrors/NotFoundErrors/NotFoundRouteError');
 const NotFoundCardError = require('../castomErrors/NotFoundErrors/NotFoundCardError');
 const NotFoundUserError = require('../castomErrors/NotFoundErrors/NotFoundUserError');
-const UncorrectDataError = require('../castomErrors/UncorrectDataError');
 const NotFoundError = require('../castomErrors/NotFoundErrors/NotFoundError');
 
 const checkExistence = (object, Err = NotFoundError) => {

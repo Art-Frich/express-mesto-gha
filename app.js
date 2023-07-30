@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const { celebrate, errors } = require('celebrate');
 
 const auth = require('./middlewares/auth');
@@ -23,6 +24,7 @@ try {
 
   app.use(helmet());
   app.use(bodyParser.json());
+  app.use(cookieParser());
 
   app.post('/signin', celebrate(signinSchema), login);
   app.post('/signup', celebrate(signupSchema), createUser);
