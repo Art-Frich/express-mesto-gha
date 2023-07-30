@@ -5,6 +5,7 @@ const { NOT_USERS_TEXT, SUCCES_CREATE_STATUS, cookieOptions } = require('../help
 const { tokenCreate, checkHandleSend } = require('../helpers/utils');
 const { UserAlreadyExist } = require('../castomErrors/UserAlreadyExist');
 const { UncorrectDataError } = require('../castomErrors/UncorrectDataError');
+const { NotFoundUserError } = require('../castomErrors/NotFoundErrors/NotFoundUserError');
 
 module.exports.getUsers = (req, res, next) => {
   User
@@ -14,7 +15,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  checkHandleSend(User.findById(req.params.userId), res, next);
+  checkHandleSend(User.findById(req.params.userId), res, next, NotFoundUserError);
 };
 
 module.exports.getMe = (req, res, next) => {
@@ -27,7 +28,7 @@ module.exports.profileUpd = (req, res, next) => {
     req.user._id,
     { name, about },
     { new: true, runValidators: true },
-  ), res, next);
+  ), res, next, NotFoundUserError);
 };
 
 module.exports.avatarUpd = (req, res, next) => {
@@ -36,7 +37,7 @@ module.exports.avatarUpd = (req, res, next) => {
     req.user._id,
     { avatar },
     { new: true, runValidators: true },
-  ), res, next);
+  ), res, next, NotFoundUserError);
 };
 
 module.exports.createUser = (req, res, next) => {
