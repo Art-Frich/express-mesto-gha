@@ -4,9 +4,8 @@ const {
   ERROR_DEFAULT_STATUS, fullerConsoleLine,
 } = require('./constants');
 const NotFoundRouteError = require('../castomErrors/NotFoundErrors/NotFoundRouteError');
-const NotFoundCardError = require('../castomErrors/NotFoundErrors/NotFoundCardError');
-const NotFoundUserError = require('../castomErrors/NotFoundErrors/NotFoundUserError');
 const NotFoundError = require('../castomErrors/NotFoundErrors/NotFoundError');
+const UncorrectDataError = require('../castomErrors/UncorrectDataError');
 
 const checkExistence = (object, Err = NotFoundError) => {
   if (!object) {
@@ -29,23 +28,27 @@ module.exports.tokenCreate = (id) => {
   return token;
 };
 
-module.exports.checkHandleSend = (promise, res, next, Err = NotFoundError) => promise
-  .then((data) => {
-    checkExistence(data, Err);
-    res.send({ data });
-  })
-  .catch(next);
+module.exports.checkHandleSend = (promise, res, next, Err = NotFoundError, handleError = null) => {
+  promise
+    .then((data) => {
+      checkExistence(data, Err);
+      res.send({ data });
+    })
+    .catch((err) => {
+      if (handleError) {
+        handleError(err, null, res, next);
+      } else {
+        next(err);
+      }
+    });
+};
 
 module.exports.handleError = (err, req, res, next) => {
-  // if (err.name === 'ValidationError') {
-  //   throw new UncorrectDataError(err.message);
-  if (err.name === 'RangeError' && /cards/.test(err.stack)) {
-    throw new NotFoundCardError();
-  } else if (err.name === 'RangeError' && /users/.test(err.stack)) {
-    throw new NotFoundUserError();
+  if (err.name === 'ValidationError') {
+    next(new UncorrectDataError());
+  } else {
+    next(err);
   }
-
-  next(err);
 };
 
 // eslint-disable-next-line no-unused-vars

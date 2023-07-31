@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 const {
   NOT_USERS_TEXT, SUCCES_CREATE_STATUS, cookieOptions, MONGO_CONFLICT_STATUS,
 } = require('../helpers/constants');
-const { tokenCreate, checkHandleSend } = require('../helpers/utils');
+const { tokenCreate, checkHandleSend, handleError } = require('../helpers/utils');
 const UserAlreadyExist = require('../castomErrors/UserAlreadyExist');
 const UncorrectDataError = require('../castomErrors/UncorrectDataError');
 const NotFoundUserError = require('../castomErrors/NotFoundErrors/NotFoundUserError');
@@ -30,7 +30,7 @@ module.exports.profileUpd = (req, res, next) => {
     req.user._id,
     { name, about },
     { new: true, runValidators: true },
-  ), res, next, NotFoundUserError);
+  ), res, next, NotFoundUserError, handleError);
 };
 
 module.exports.avatarUpd = (req, res, next) => {
@@ -39,7 +39,7 @@ module.exports.avatarUpd = (req, res, next) => {
     req.user._id,
     { avatar },
     { new: true, runValidators: true },
-  ), res, next, NotFoundUserError);
+  ), res, next, NotFoundUserError, handleError);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -60,7 +60,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === MONGO_CONFLICT_STATUS) next(new UserAlreadyExist());
-      else next(err);
+      else handleError(err, req, res, next);
     });
 };
 

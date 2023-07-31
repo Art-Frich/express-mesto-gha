@@ -1,7 +1,7 @@
 const Card = require('../models/cardModel');
 const AlienCardError = require('../castomErrors/AlienCardError');
 const { SUCCES_CREATE_STATUS } = require('../helpers/constants');
-const { checkExistence, checkHandleSend } = require('../helpers/utils');
+const { checkExistence, checkHandleSend, handleError } = require('../helpers/utils');
 const NotFoundCardError = require('../castomErrors/NotFoundErrors/NotFoundCardError');
 
 module.exports.getCards = (req, res, next) => {
@@ -18,7 +18,7 @@ module.exports.createCard = (req, res, next) => {
   Card
     .create({ name, link, owner })
     .then((card) => res.status(SUCCES_CREATE_STATUS).send({ data: card }))
-    .catch(next);
+    .catch((err) => handleError(err, req, res, next));
 };
 
 module.exports.deleteCard = (req, res, next) => {

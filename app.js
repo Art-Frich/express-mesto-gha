@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 
 const {
-  handleAppError, handleStartServerConsole, handleError, sendError,
+  handleAppError, handleStartServerConsole, sendError,
 } = require('./helpers/utils');
 const { mongooseOptions } = require('./helpers/constants');
 const routes = require('./routes/index');
@@ -27,7 +27,6 @@ try {
   app.use(routes);
 
   app.use(errors()); // celebrate errors handle
-  app.use(handleError); // others error handle
   app.use(sendError); // send others error
 
   app.listen(PORT, handleStartServerConsole(PORT));
